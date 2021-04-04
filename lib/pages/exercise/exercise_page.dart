@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:learn_read/models/exercise/exercise_config.dart';
 import 'package:learn_read/services/exercise/exercise_service.dart';
 import 'package:learn_read/widgets/confirm_buttom.dart';
 
-class LetterExercisePage extends StatefulWidget {
+class ExercisePage extends StatefulWidget {
   @override
-  _LetterExercisePageState createState() => _LetterExercisePageState();
+  _ExercisePageState createState() => _ExercisePageState();
 }
 
-class _LetterExercisePageState extends State<LetterExercisePage>
+class _ExercisePageState extends State<ExercisePage>
     with SingleTickerProviderStateMixin {
   dynamic _currentSelected;
   dynamic _correct = 'A';
   bool? _isCorrect;
   bool _isChanging = false;
+  int _currentPage = 0;
+  int _pageCount = 10;
 
   late String _currentExercise;
   late String _nextExercise;
@@ -103,7 +106,7 @@ class _LetterExercisePageState extends State<LetterExercisePage>
         padding: const EdgeInsets.only(right: 16.0),
         child: LinearProgressIndicator(
           minHeight: 10,
-          value: 0.5,
+          value: _currentPage / _pageCount,
         ),
       ),
     );
@@ -129,6 +132,10 @@ class _LetterExercisePageState extends State<LetterExercisePage>
                 if (!mounted) return;
                 setState(() {
                   _currentSelected = null;
+                  _currentPage++;
+                  if(_currentPage >= _pageCount){
+                    Navigator.of(context).pushNamedAndRemoveUntil('exerciseFinish', (route) => false);
+                  }
                 });
               });
             });

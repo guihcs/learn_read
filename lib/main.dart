@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:learn_read/pages/exercise_finish/exercise_finish_page.dart';
 import 'package:learn_read/pages/home.dart';
-import 'package:learn_read/pages/letters/letter_exercise_page.dart';
-import 'package:learn_read/pages/syllables/syllable_exercise_page.dart';
-import 'package:learn_read/pages/words/word_exercise_page.dart';
+import 'package:learn_read/services/exercise/user_progress_service.dart';
 
-void main() {
+import 'pages/exercise/exercise_page.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserProgressService.init();
   runApp(MyApp());
 }
 
@@ -16,9 +20,8 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home',
       routes: {
         'home': (context) => HomePage(),
-        'letterExercise': (context) => LetterExercisePage(),
-        'syllableExercise': (context) => SyllableExercisePage(),
-        'wordExercise': (context) => WordExercisePage()
+        'exercise': (context) => ExercisePage(),
+        'exerciseFinish': (context) => ExerciseFinishPage()
       },
     );
   }

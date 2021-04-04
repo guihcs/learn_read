@@ -59,23 +59,12 @@ class _ExercisesTabState extends State<ExercisesTab> {
     return Column(
       children: [
         ListTile(
-          title: Text('Letras'),
+          title: Text('Exercício'),
           onTap: (){
-            Navigator.of(context).pushNamed('letterExercise');
+            Navigator.of(context).pushNamed('exercise');
           },
         ),
-        ListTile(
-          title: Text('Sílabas'),
-          onTap: (){
-            Navigator.of(context).pushNamed('syllableExercise');
-          },
-        ),
-        ListTile(
-          title: Text('Palavras'),
-          onTap: (){
-            Navigator.of(context).pushNamed('wordExercise');
-          },
-        )
+
       ],
     );
   }

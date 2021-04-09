@@ -1,7 +1,7 @@
 
 
 class WordMap {
-  late Map<String, Set> _wordMap;
+  late Map<String, Set<String>> _wordMap;
 
   WordMap.fromJson(Map<String, dynamic> json){
     _wordMap = json.map((key, value) => MapEntry(key, Set.from(value)));
@@ -13,5 +13,7 @@ class WordMap {
     return json;
   }
 
-  get wordMap => _wordMap;
+  Set<String> getSet(word){
+    return _wordMap[word]!;
+  }
 }

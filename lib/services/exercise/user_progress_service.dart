@@ -17,9 +17,9 @@ class UserProgressService {
     Map<String, dynamic> wordData = jsonDecode(wordMapData);
     _wordMap = WordMap.fromJson(wordData['letterWordMap']);
     _wordCompetencies = Map<String, Competencies>.from(wordData['wordList'].map((key, value) => MapEntry(key, Competencies.fromJson(value))));
-    
+
     final result = ExerciseGenerator.generate(10, 3);
-    print(result);
+    ExerciseGenerator.answerQuestion(result.first, result.first.correctOption);
   }
 
   static WordMap get wordMap => _wordMap;

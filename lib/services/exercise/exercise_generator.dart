@@ -1,14 +1,41 @@
 import 'dart:math';
 
+import 'package:diacritic/diacritic.dart';
 import 'package:learn_read/models/exercise/exercise_config.dart';
 import 'package:learn_read/models/user/word_competency.dart';
 import 'package:learn_read/services/exercise/user_progress_service.dart';
 import 'package:collection/collection.dart';
 
 class ExerciseGenerator {
-  static answerQuestion(data) {}
+  static answerQuestion(ExerciseConfig config, String response) {
+    num learnRate = 0.1;
+    if (config.correctOption != response) {
+      learnRate *= -1;
+    }
+    String filteredResponse = removeDiacritics(response);
+    filteredResponse.split('').forEach((element) {
+      Set<String> containedWords = UserProgressService.wordMap.getSet(element);
+      containedWords.forEach((w) {
+        if(w == response) return;
+        num total = UserProgressService.wordCompetencies[w]!.total;
+        total = _calcNewCompetence(total, w.length < response.length ? learnRate * -1 : learnRate, w);
+        UserProgressService.wordCompetencies[w]!.total = total;
+      });
+    });
 
-  static generate(count, maxRepeatedCount) {
+    num total = UserProgressService.wordCompetencies[response]!.total;
+    num exerciseCompetence = _calcNewCompetence(total, learnRate * -1, response);
+    UserProgressService.wordCompetencies[response]!.total = exerciseCompetence;
+  }
+  
+  static _calcNewCompetence(previous, learnRate, w){
+    previous += learnRate / w.length;
+    if(previous <= 0) previous = 0;
+    else if (previous < 0.05) previous = 0.05;
+    return previous;
+  }
+
+  static List<ExerciseConfig> generate(count, maxRepeatedCount) {
     final competencyList = _getCompetencyList(count, maxRepeatedCount);
 
     return competencyList.map<ExerciseConfig>((entry) {
@@ -50,7 +77,7 @@ class ExerciseGenerator {
     final options = <String>[];
     final words = competencies.keys.toList();
     for (int i = 0; i < words.length; i++) {
-      if(options.length >= count - 1) break;
+      if (options.length >= count - 1) break;
       if (words[i].length != correct.length ||
           words[i] == correct ||
           random.nextDouble() < 0.5) continue;

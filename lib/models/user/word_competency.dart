@@ -1,5 +1,5 @@
 class Competencies {
-  double total = 0;
+  num total = 0;
   Competencies(this.total);
 
   Competencies.fromJson(json){

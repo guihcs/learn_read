@@ -1,5 +1,7 @@
 # learn_read
 
+<img src="https://drive.google.com/uc?export=view&id=15EIvjT7tTS7IImjseEc-wvr8uAcwHQHo" alt="logo" width="250" height="250">
+
 A Flutter project to teach children how to read.
 
 ## How it works?

@@ -7,8 +7,10 @@ import 'package:learn_read/services/exercise/user_progress_service.dart';
 import 'package:collection/collection.dart';
 
 class ExerciseGenerator {
-  static answerQuestion(ExerciseConfig config, String response) {
+  static answerQuestion(ExerciseConfig config) {
+    config.responded = true;
     num learnRate = 0.1;
+    String response = config.currentSelected ?? '';
     if (config.correctOption != response) {
       learnRate *= -1;
     }

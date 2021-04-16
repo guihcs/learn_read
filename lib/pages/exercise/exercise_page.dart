@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_read/models/exercise/exercise_config.dart';
+import 'package:learn_read/services/exercise/exercise_generator.dart';
 import 'package:learn_read/services/exercise/exercise_service.dart';
 import 'package:learn_read/widgets/confirm_buttom.dart';
 
@@ -10,36 +11,52 @@ class ExercisePage extends StatefulWidget {
 
 class _ExercisePageState extends State<ExercisePage>
     with SingleTickerProviderStateMixin {
-  dynamic _currentSelected;
-  dynamic _correct = 'A';
-  bool? _isCorrect;
   bool _isChanging = false;
-  int _currentPage = 0;
-  int _pageCount = 10;
+  int _currentExerciseIndex = 0;
+  late List<ExerciseConfig> _exercises;
 
-  late String _currentExercise;
-  late String _nextExercise;
+  late ExerciseConfig _currentExercise;
+  late ExerciseConfig _nextExercise;
 
   PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
-    _currentExercise = 'findFromSpeak';
-    _nextExercise = 'findFromSpeak';
 
     _pageController.addListener(() {
       if (_pageController.page == 1) {
         setState(() {
-          _currentExercise = _nextExercise;
-          _nextExercise = 'findFromSpeak';
+          if (_currentExerciseIndex < _exercises.length)
+            _currentExercise = _exercises[_currentExerciseIndex];
+          if (_currentExerciseIndex < _exercises.length - 1)
+            _nextExercise = _exercises[_currentExerciseIndex + 1];
+
           _pageController.jumpToPage(0);
-          _isCorrect = null;
           _isChanging = false;
-          _currentSelected = null;
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    _exercises =
+        ModalRoute.of(context)!.settings.arguments as List<ExerciseConfig>;
+    _exercises.forEach((element) {
+      element.onChanged = (value) {
+        setState(() {
+          _exercises[_currentExerciseIndex].currentSelected = value;
+        });
+      };
+    });
+
+    if (_currentExerciseIndex < _exercises.length)
+      _currentExercise = _exercises[_currentExerciseIndex];
+    if (_currentExerciseIndex < _exercises.length - 1)
+      _nextExercise = _exercises[_currentExerciseIndex + 1];
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -62,28 +79,8 @@ class _ExercisePageState extends State<ExercisePage>
                 physics: NeverScrollableScrollPhysics(),
                 controller: _pageController,
                 children: [
-                  ExerciseBuilder.build(
-                    ExerciseConfig(
-                        name: _currentExercise,
-                        correctOption: 'A',
-                        currentSelected: _currentSelected,
-                        options: ['A', 'E', 'I', 'O'],
-                        onChanged: (value) {
-                          setState(() {
-                            _currentSelected = value;
-                          });
-                        }),
-                  ),
-                  ExerciseBuilder.build(ExerciseConfig(
-                      name: _nextExercise,
-                      correctOption: 'A',
-                      currentSelected: _currentSelected,
-                      options: ['A', 'E', 'I', 'O'],
-                      onChanged: (value) {
-                        setState(() {
-                          _currentSelected = value;
-                        });
-                      })),
+                  ExerciseBuilder.build(_currentExercise),
+                  ExerciseBuilder.build(_nextExercise),
                 ],
               )),
               _confirmButton()
@@ -106,42 +103,45 @@ class _ExercisePageState extends State<ExercisePage>
         padding: const EdgeInsets.only(right: 16.0),
         child: LinearProgressIndicator(
           minHeight: 10,
-          value: _currentPage / _pageCount,
+          value: _currentExerciseIndex / _exercises.length,
         ),
       ),
     );
   }
 
   _confirmButton() {
+    ExerciseConfig config = _exercises[_currentExerciseIndex];
+
     return ListTile(
         title: ConfirmButton(
-      isCorrect: _isCorrect,
-      enabled: _currentSelected != null,
+      isCorrect: config.responded ? config.isCorrect() : null,
+      enabled: config.currentSelected != null,
       onClick: () {
+        ExerciseGenerator.answerQuestion(config);
         setState(() {
-          _isCorrect =
-              _currentSelected == null ? null : _correct == _currentSelected;
 
-          if ((_isCorrect ?? false) && !_isChanging) {
-            _isChanging = true;
-
-            Future.delayed(Duration(seconds: 1), () {
-              _pageController.animateToPage(1,
-                  duration: Duration(milliseconds: 300), curve: Curves.ease);
-              WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-                if (!mounted) return;
-                setState(() {
-                  _currentSelected = null;
-                  _currentPage++;
-                  if(_currentPage >= _pageCount){
-                    Navigator.of(context).pushNamedAndRemoveUntil('exerciseFinish', (route) => false);
-                  }
-                });
-              });
-            });
-          }
         });
       },
+      onAnimationEnd: () {
+        if (!((config.isCorrect() ?? false) && !_isChanging)) return;
+
+        if (_currentExerciseIndex + 1 >= _exercises.length) {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('exerciseFinish', (route) => false);
+        } else {
+          _loadNextExercise();
+        }
+      },
     ));
+  }
+
+  _loadNextExercise() {
+    _isChanging = true;
+    _pageController.animateToPage(1,
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
+
+    setState(() {
+      _currentExerciseIndex++;
+    });
   }
 }

@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:learn_read/services/exercise/exercise_generator.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -61,7 +62,8 @@ class _ExercisesTabState extends State<ExercisesTab> {
         ListTile(
           title: Text('Exercício'),
           onTap: (){
-            Navigator.of(context).pushNamed('exercise');
+            final exercises = ExerciseGenerator.generate(10, 3);
+            Navigator.of(context).pushNamed('exercise', arguments: exercises);
           },
         ),
 

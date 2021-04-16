@@ -5,22 +5,20 @@ class ExerciseTypes {
 
 
 class ExerciseConfig {
-  final String name;
-  final String correctOption;
-  final String? currentSelected;
-  final List<String> options;
-  final Function(String)? onChanged;
+  String name;
+  String correctOption;
+  String? currentSelected;
+  List<String> options;
+  Function(String)? onChanged;
+  bool responded = false;
 
-  ExerciseConfig({required name, required correctOption, currentSelected, options = const [], onChanged}) :
-    this.name = name,
-    this.correctOption = correctOption,
-    this.currentSelected = currentSelected,
-    this.options = options,
-    this.onChanged = onChanged
-    ;
+  ExerciseConfig({required this.name, required this.correctOption, this.currentSelected, this.options = const [], this.onChanged});
 
   @override
   String toString() {
     return 'ExerciseConfig{type: $name, correct: $correctOption, options: $options }';
   }
+
+
+  bool? isCorrect() => currentSelected != null ? currentSelected == correctOption : null;
 }

@@ -1,7 +1,9 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:learn_read/services/exercise/exercise_generator.dart';
+import 'package:learn_read/pages/progress/progress.dart';
+
+import 'exercise/exercise_tab.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   dynamic _tabs = [
     ExercisesTab(),
-    Container()
+    ProgressTab()
   ];
 
   void _onItemTapped(int index) {
@@ -31,11 +33,12 @@ class _HomePageState extends State<HomePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Home'
+
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.analytics_outlined),
+            label: 'Progress'
           ),
         ],
         currentIndex: _selectedIndex,
@@ -49,27 +52,6 @@ class _HomePageState extends State<HomePage> {
 
 
 
-class ExercisesTab extends StatefulWidget {
-  @override
-  _ExercisesTabState createState() => _ExercisesTabState();
-}
 
-class _ExercisesTabState extends State<ExercisesTab> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text('Exercício'),
-          onTap: (){
-            final exercises = ExerciseGenerator.generate(10, 3);
-            Navigator.of(context).pushNamed('exercise', arguments: exercises);
-          },
-        ),
-
-      ],
-    );
-  }
-}
 
 

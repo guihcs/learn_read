@@ -26,13 +26,14 @@ class _ExercisePageState extends State<ExercisePage>
 
     _pageController.addListener(() {
       if (_pageController.page == 1) {
-        setState(() {
-          if (_currentExerciseIndex < _exercises.length)
-            _currentExercise = _exercises[_currentExerciseIndex];
-          if (_currentExerciseIndex < _exercises.length - 1)
-            _nextExercise = _exercises[_currentExerciseIndex + 1];
+        if (_currentExerciseIndex < _exercises.length)
+          _currentExercise = _exercises[_currentExerciseIndex];
+        if (_currentExerciseIndex < _exercises.length - 1)
+          _nextExercise = _exercises[_currentExerciseIndex + 1];
 
-          _pageController.jumpToPage(0);
+        _pageController.jumpToPage(0);
+
+        setState(() {
           _isChanging = false;
         });
       }
@@ -72,19 +73,7 @@ class _ExercisePageState extends State<ExercisePage>
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
-            children: [
-              _progressTile(),
-              Expanded(
-                  child: PageView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _pageController,
-                children: [
-                  ExerciseBuilder.build(_currentExercise),
-                  ExerciseBuilder.build(_nextExercise),
-                ],
-              )),
-              _confirmButton()
-            ],
+            children: [_progressTile(), _exerciseArea(), _confirmButton()],
           ),
         ),
       ),
@@ -109,6 +98,18 @@ class _ExercisePageState extends State<ExercisePage>
     );
   }
 
+  _exerciseArea() {
+    return Expanded(
+        child: PageView(
+      physics: NeverScrollableScrollPhysics(),
+      controller: _pageController,
+      children: [
+        ExerciseBuilder.build(_currentExercise),
+        ExerciseBuilder.build(_nextExercise),
+      ],
+    ));
+  }
+
   _confirmButton() {
     ExerciseConfig config = _exercises[_currentExerciseIndex];
 
@@ -117,28 +118,37 @@ class _ExercisePageState extends State<ExercisePage>
       isCorrect: config.responded ? config.isCorrect() : null,
       enabled: config.currentSelected != null,
       onClick: () {
-        ExerciseGenerator.answerQuestion(config);
-        setState(() {
-
-        });
+        _answerQuestion(config);
       },
       onAnimationEnd: () {
-        if (!((config.isCorrect() ?? false) && !_isChanging)) return;
-
-        if (_currentExerciseIndex + 1 >= _exercises.length) {
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('exerciseFinish', (route) => false);
-        } else {
-          _loadNextExercise();
-        }
+        _onButtonAnimationEnd(config);
       },
     ));
+  }
+
+  _answerQuestion(config) {    
+    ExerciseGenerator.answerQuestion(config);
+    setState(() {});
+  }
+
+  _onButtonAnimationEnd(config) {
+    if (!((config.isCorrect() ?? false) && !_isChanging)) {
+      config.responded = false;
+      return;
+    }
+
+    if (_currentExerciseIndex + 1 >= _exercises.length) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('exerciseFinish', (route) => false);
+    } else {
+      _loadNextExercise();
+    }
   }
 
   _loadNextExercise() {
     _isChanging = true;
     _pageController.animateToPage(1,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+        duration: Duration(milliseconds: 600), curve: Curves.ease);
 
     setState(() {
       _currentExerciseIndex++;

@@ -7,39 +7,61 @@ import 'package:learn_read/services/exercise/user_progress_service.dart';
 import 'package:collection/collection.dart';
 
 class ExerciseGenerator {
+
+
   static answerQuestion(ExerciseConfig config) {
     config.responded = true;
-    num learnRate = 0.1;
+    num lr = UserProgressService.learningRate;
     String response = config.currentSelected ?? '';
     if (config.correctOption != response) {
-      learnRate *= -1;
+      lr *= -1;
+    } else {
+      UserProgressService.learningRate *= 1.1;
     }
+
+    UserProgressService.currentProgress += lr * 10;
+
+    _updateWordCompetencies(response, lr);
+  }
+
+  static _updateWordCompetencies(response, learningRate) {
     String filteredResponse = removeDiacritics(response);
+
     filteredResponse.split('').forEach((element) {
-      Set<String> containedWords = UserProgressService.wordMap.getSet(element);
-      containedWords.forEach((w) {
-        if(w == response) return;
-        num total = UserProgressService.wordCompetencies[w]!.total;
-        total = _calcNewCompetence(total, w.length < response.length ? learnRate * -1 : learnRate, w);
-        UserProgressService.wordCompetencies[w]!.total = total;
-      });
+      _updateWordSetCompetencies(element, response, learningRate);
     });
 
     num total = UserProgressService.wordCompetencies[response]!.total;
-    num exerciseCompetence = _calcNewCompetence(total, learnRate * -1, response);
+    num exerciseCompetence =
+        _calcNewCompetence(total, learningRate * -1, response);
     UserProgressService.wordCompetencies[response]!.total = exerciseCompetence;
   }
-  
-  static _calcNewCompetence(previous, learnRate, w){
+
+  static _updateWordSetCompetencies(char, response, lr){
+    Set<String>? wordsThatContainsChar = UserProgressService.wordMap.getWordSet(char);
+      if (wordsThatContainsChar == null) return;
+      wordsThatContainsChar.forEach((word) {
+        if (word == response) return;
+        num lastCompetence = UserProgressService.wordCompetencies[word]!.total;
+        num wordLearningRate = word.length <= response.length ? lr * -1 : lr;
+        num newCompetence = _calcNewCompetence(lastCompetence, wordLearningRate, word);
+        UserProgressService.wordCompetencies[word]!.total = newCompetence;
+      });
+  }
+
+  static _calcNewCompetence(previous, learnRate, w) {
     previous += learnRate / w.length;
-    if(previous <= 0) previous = 0;
-    else if (previous < 0.05) previous = 0.05;
+    if (previous <= 0)
+      previous = 0;
+    else if (previous < 0.005)
+      previous = 0.005;
+    else if (previous > 1) previous = 1;
     return previous;
   }
 
   static List<ExerciseConfig> generate(count, maxRepeatedCount) {
-    final competencyList = _getCompetencyList(count, maxRepeatedCount);
-
+    final competencyList = _getCompetencyList(count, maxRepeatedCount, 50);
+    
     return competencyList.map<ExerciseConfig>((entry) {
       return ExerciseConfig(
           name: ExerciseTypes.findFromSpeak,
@@ -48,27 +70,36 @@ class ExerciseGenerator {
     }).toList();
   }
 
-  static _getCompetencyList(count, maxRepeatedCount) {
+  static _getCompetencyList(count, maxRepeatedCount, maxLoopCount) {
     Map<String, Competencies> competencies =
         UserProgressService.wordCompetencies;
 
     final exercises = [];
     Random random = Random();
-
+    int loopCount = 0;
     while (exercises.length < count) {
-      MapEntry<String, dynamic>? exercise = competencies.entries
-          .firstWhereOrNull(
-              (element) => random.nextDouble() < element.value.total);
+      loopCount++;
+      if (loopCount > maxLoopCount) {
+        break;
+      }
 
-      if (exercise == null) continue;
-      final exerciseRepeatedCount = exercises.fold<int>(
-          0,
-          (previousValue, element) =>
-              element.key == exercise.key ? previousValue + 1 : previousValue);
+      MapEntry<String, dynamic>? exercise =
+          competencies.entries.firstWhereOrNull((element) {
+        final exerciseRepeatedCount = exercises.fold<int>(
+            0,
+            (previousValue, el) =>
+                el.key == element.key ? previousValue + 1 : previousValue);
+        if (exerciseRepeatedCount >= maxRepeatedCount) return false;
+        return random.nextDouble() < element.value.total;
+      });
 
-      if (exerciseRepeatedCount < maxRepeatedCount) exercises.add(exercise);
+      if (exercise == null) {
+        continue;
+      }
+
+      exercises.add(exercise);
     }
-
+    exercises.shuffle();
     return exercises;
   }
 
@@ -87,6 +118,7 @@ class ExerciseGenerator {
       options.add(words[i]);
     }
     options.add(correct);
+    options.shuffle();
     return options;
   }
 }

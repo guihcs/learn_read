@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class AudioService {
 
@@ -25,6 +26,21 @@ class AudioService {
     await _flutterTts.speak(text);
     _completer = Completer();
     return _completer!.future;
+  }
+
+  listen() async {
+    SpeechToText speech = SpeechToText();
+    bool available = await speech.initialize( onStatus: (status){}, onError: (error){} );
+    if ( available ) {
+        speech.listen( onResult: (result){
+          
+        } );
+    }
+    else {
+        print("The user has denied the use of speech recognition.");
+    }
+
+    speech.stop();
   }
 
 

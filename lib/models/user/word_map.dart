@@ -13,7 +13,7 @@ class WordMap {
     return json;
   }
 
-  Set<String> getSet(word){
-    return _wordMap[word]!;
+  Set<String>? getWordSet(word){
+    return _wordMap[word];
   }
 }

@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.analytics_outlined),
-            label: 'Progress'
+            label: 'Progresso'
           ),
         ],
         currentIndex: _selectedIndex,

@@ -91,7 +91,7 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
         child: Center(
           child: Text(
             option,
-            style: TextStyle(fontSize: 24, color: Colors.black),
+            style: TextStyle(fontSize: 32, color: Colors.black),
           ),
         ),
       ),

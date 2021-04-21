@@ -12,11 +12,11 @@ class _ProgressTabState extends State<ProgressTab> {
   Widget build(BuildContext context) {
     List<num> progressHistory = UserProgressService.progressHistory;
     return Column(mainAxisSize: MainAxisSize.min, children: [
-      Text('Learning rate: ${UserProgressService.learningRate}'),
+      Text('Taxa de aprendizado: ${UserProgressService.learningRate}'),
       Container(
         padding: EdgeInsets.only(top: 16, bottom: 16, right: 16),
         width: double.infinity,
-        height: 600,
+        height: 400,
         child: LineChart(
           LineChartData(
             lineBarsData: [

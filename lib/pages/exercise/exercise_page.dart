@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_read/models/exercise/exercise_config.dart';
+import 'package:learn_read/services/audio/audio_service.dart';
 import 'package:learn_read/services/exercise/exercise_generator.dart';
 import 'package:learn_read/services/exercise/exercise_service.dart';
 import 'package:learn_read/widgets/confirm_buttom.dart';
@@ -118,6 +119,12 @@ class _ExercisePageState extends State<ExercisePage>
       isCorrect: config.responded ? config.isCorrect() : null,
       enabled: config.currentSelected != null,
       onClick: () {
+        if(config.isCorrect() == null) return;
+        if(config.isCorrect()!) {
+          AudioService.instance.playFile('assets/sounds/correct.wav');
+        } else if (!config.isCorrect()!){
+          AudioService.instance.playFile('assets/sounds/wrong.wav', volume: 0.5);
+        }
         _answerQuestion(config);
       },
       onAnimationEnd: () {

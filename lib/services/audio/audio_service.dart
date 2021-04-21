@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -9,6 +10,7 @@ class AudioService {
 
   static AudioService? _instance;
   final FlutterTts _flutterTts = FlutterTts();
+  AudioPlayer _audioPlayer = AudioPlayer();
   Completer? _completer;
 
   AudioService._(){
@@ -19,6 +21,10 @@ class AudioService {
         _completer = null;
       }
     });
+  }
+
+  playFile(path, {volume = 1.0}) async {
+    return await _audioPlayer.play(path, isLocal: true, volume: volume);
   }
 
   speak(String text) async {

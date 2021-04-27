@@ -121,7 +121,7 @@ class _ExercisePageState extends State<ExercisePage>
       onClick: () {
         if(config.isCorrect() == null) return;
         if(config.isCorrect()!) {
-          AudioService.instance.playFile('assets/sounds/correct.wav');
+          AudioService.instance.playFile('assets/sounds/correct2.wav');
         } else if (!config.isCorrect()!){
           AudioService.instance.playFile('assets/sounds/wrong.wav', volume: 0.5);
         }

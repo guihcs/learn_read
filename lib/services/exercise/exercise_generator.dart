@@ -7,8 +7,6 @@ import 'package:learn_read/services/exercise/user_progress_service.dart';
 import 'package:collection/collection.dart';
 
 class ExerciseGenerator {
-
-
   static answerQuestion(ExerciseConfig config) {
     config.responded = true;
     num lr = UserProgressService.learningRate;
@@ -37,16 +35,18 @@ class ExerciseGenerator {
     UserProgressService.wordCompetencies[response]!.total = exerciseCompetence;
   }
 
-  static _updateWordSetCompetencies(char, response, lr){
-    Set<String>? wordsThatContainsChar = UserProgressService.wordMap.getWordSet(char);
-      if (wordsThatContainsChar == null) return;
-      wordsThatContainsChar.forEach((word) {
-        if (word == response) return;
-        num lastCompetence = UserProgressService.wordCompetencies[word]!.total;
-        num wordLearningRate = word.length <= response.length ? lr * -1 : lr;
-        num newCompetence = _calcNewCompetence(lastCompetence, wordLearningRate, word);
-        UserProgressService.wordCompetencies[word]!.total = newCompetence;
-      });
+  static _updateWordSetCompetencies(char, response, lr) {
+    Set<String>? wordsThatContainsChar =
+        UserProgressService.wordMap.getWordSet(char);
+    if (wordsThatContainsChar == null) return;
+    wordsThatContainsChar.forEach((word) {
+      if (word == response) return;
+      num lastCompetence = UserProgressService.wordCompetencies[word]!.total;
+      num wordLearningRate = word.length <= response.length ? lr * -1 : lr;
+      num newCompetence =
+          _calcNewCompetence(lastCompetence, wordLearningRate, word);
+      UserProgressService.wordCompetencies[word]!.total = newCompetence;
+    });
   }
 
   static _calcNewCompetence(previous, learnRate, w) {
@@ -61,10 +61,10 @@ class ExerciseGenerator {
 
   static List<ExerciseConfig> generate(count, maxRepeatedCount) {
     final competencyList = _getCompetencyList(count, maxRepeatedCount, 50);
-    
+    Random random = Random();
     return competencyList.map<ExerciseConfig>((entry) {
       return ExerciseConfig(
-          name: ExerciseTypes.findFromSpeak,
+          name: ExerciseTypes.all[random.nextInt(ExerciseTypes.all.length)],
           correctOption: entry.key,
           options: _getOptions(entry.key, 4));
     }).toList();

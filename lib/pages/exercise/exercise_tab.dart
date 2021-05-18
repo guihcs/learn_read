@@ -9,8 +9,12 @@ class ExercisesTab extends StatefulWidget {
 class _ExercisesTabState extends State<ExercisesTab> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [_wordExercise(), _textReading()],
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      width: double.infinity,
+      child: Column(
+        children: [_wordExercise(), _textReading()],
+      ),
     );
   }
 
@@ -20,15 +24,7 @@ class _ExercisesTabState extends State<ExercisesTab> {
         final exercises = ExerciseGenerator.generate(10, 3);
         Navigator.of(context).pushNamed('exercise', arguments: exercises);
       },
-      child: Card(
-        child: Container(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            width: double.infinity,
-            child: Icon(
-              Icons.fitness_center,
-              size: 48,
-            )),
-      ),
+      child: _activityTile(Icons.fitness_center)
     );
   }
 
@@ -38,15 +34,20 @@ class _ExercisesTabState extends State<ExercisesTab> {
         final exercises = ExerciseGenerator.generate(10, 3);
         Navigator.of(context).pushNamed('textChoose', arguments: exercises);
       },
-      child: Card(
-        child: Container(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            width: double.infinity,
-            child: Icon(
-              Icons.book,
-              size: 48,
-            )),
-      ),
+      child: _activityTile(Icons.book)
+    );
+  }
+
+
+  _activityTile(icon){
+    return Card(
+      child: Container(
+          padding: EdgeInsets.all(64),
+          child: Icon(
+            icon,
+            size: 52,
+            color: Colors.deepPurple[800],
+          )),
     );
   }
 }

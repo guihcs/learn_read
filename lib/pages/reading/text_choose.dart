@@ -13,7 +13,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text Read'),
+        title: Text('Leitura'),
       ),
       body: Column(children: [
         _bookTile('assets/text/alice.md', 'Alice'),
@@ -27,7 +27,10 @@ class _TextChoosePageState extends State<TextChoosePage> {
         ListTile(
           onTap: () async {
             String text = await rootBundle.loadString(textPath, cache: false);
-            Navigator.of(context).pushNamed('textRead', arguments: text);
+            Navigator.of(context).pushNamed('textRead', arguments: {
+              'text': text,
+              'title': name
+            });
           },
           title: 
         Text(name),),);

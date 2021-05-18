@@ -1,6 +1,9 @@
 
 class ExerciseTypes {
   static const findFromSpeak = 'findFromSpeak';
+  static const readWord = 'readWord';
+  static const all = ['findFromSpeak', 'readWord'];
+
 }
 
 

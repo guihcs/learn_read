@@ -9,14 +9,25 @@ class TextReadPage extends StatefulWidget {
 }
 
 class _TextReadPageState extends State<TextReadPage> {
+
+  dynamic _args;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _args = ModalRoute.of(context)?.settings.arguments;
+  }
+
   @override
   Widget build(BuildContext context) {
-    String text = ModalRoute.of(context)!.settings.arguments as String;
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(_args?['title'] ?? 'No title'),
+      ),
       body: Markdown(
         styleSheet: MarkdownStyleSheet(p: TextStyle(fontSize: 18)),
-        data: text
+        data: _args?['text'] ?? 'No text'
         ),
     );
   }

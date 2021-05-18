@@ -105,7 +105,7 @@ class _ExercisePageState extends State<ExercisePage>
       physics: NeverScrollableScrollPhysics(),
       controller: _pageController,
       children: [
-        ExerciseBuilder.build(_currentExercise),
+        ExerciseBuilder.build(_currentExercise, visible: true),
         ExerciseBuilder.build(_nextExercise),
       ],
     ));
@@ -121,7 +121,9 @@ class _ExercisePageState extends State<ExercisePage>
       onClick: () {
         if(config.isCorrect() == null) return;
         if(config.isCorrect()!) {
-          AudioService.instance.playFile('assets/sounds/correct2.wav');
+
+          AudioService.instance.playFile('assets/sounds/correct2.mp3', volume: 0.3);
+
         } else if (!config.isCorrect()!){
           AudioService.instance.playFile('assets/sounds/wrong.wav', volume: 0.5);
         }

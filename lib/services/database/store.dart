@@ -12,17 +12,17 @@ class Store {
     if(_db != null) return;
 
     final dir = await getApplicationDocumentsDirectory();
-    _db = await databaseFactoryIo.openDatabase('${dir.path}/learn_read');
+    _db = await databaseFactoryIo.openDatabase('${dir.path}/learn_read.db');
   }
 
   static put(String key, dynamic value) async {
-    init();
+    await init();
     final store = StoreRef.main();
     await store.record(key).put(_db!, value);
   }
 
   static get(String key) async {
-    init();
+    await init();
     final store = StoreRef.main();
     return await store.record(key).get(_db!);
   }

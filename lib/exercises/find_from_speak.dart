@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:learn_read/services/audio/audio_service.dart';
 
 class FindFromSpeakExercise extends StatefulWidget {
-  final String _correct;
-  final String? _currentSelected;
-  final List<String> _options;
-  final Function(String)? _onSelectedChange;
+  final String correct;
+  final String? currentSelected;
+  final List<String> options;
+  final Function(String)? onSelectedChange;
+  final bool visible;
 
   FindFromSpeakExercise(
-      {required correct, required options, currentSelected, onSelectedChange})
-      : _correct = correct,
-        _currentSelected = currentSelected,
-        _options = options,
-        _onSelectedChange = onSelectedChange;
+      {required this.correct,
+      required this.options,
+      required this.visible,
+      this.currentSelected,
+      this.onSelectedChange});
 
   @override
   _FindFromSpeakExerciseState createState() => _FindFromSpeakExerciseState();
@@ -24,7 +25,7 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
   @override
   void initState() {
     super.initState();
-    _speak(widget._correct);
+    _speak(widget.correct);
   }
 
   @override
@@ -58,7 +59,7 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
         crossAxisSpacing: 20,
         padding: padding,
         children: List.generate(4, (index) {
-          return _card(widget._options[index]);
+          return _card(widget.options[index]);
         }),
       );
     });
@@ -66,7 +67,7 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
 
   _speakButton() {
     return ElevatedButton(
-        onPressed: () => _speak(widget._correct),
+        onPressed: () => _speak(widget.correct),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Icon(
@@ -78,14 +79,14 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
 
   _card(option) {
     return Card(
-      color: widget._currentSelected == option
+      color: widget.currentSelected == option
           ? Colors.lightBlueAccent[200]
           : Colors.white,
       child: InkWell(
         onTap: () {
           _speak(option);
-          if (widget._onSelectedChange != null) {
-            widget._onSelectedChange!(option);
+          if (widget.onSelectedChange != null) {
+            widget.onSelectedChange!(option);
           }
         },
         child: Center(

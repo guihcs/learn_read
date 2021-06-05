@@ -15,3 +15,12 @@ The app have three exercise levels.
 * presyllabic
 * syllabic
 * alphabetic
+
+## Features
+
+* The app have listening and reading exercises.
+* You can see your reading progress in the Progress tab.
+
+## More Info
+
+You can find more info in the project's [Wiki](https://github.com/guihcs/learn_read/wiki) page.

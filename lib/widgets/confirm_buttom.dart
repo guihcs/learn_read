@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,7 +8,8 @@ class ConfirmButton extends StatefulWidget {
   final bool enabled;
   final onAnimationEnd;
 
-  ConfirmButton({this.isCorrect, this.onClick, this.enabled = true, this.onAnimationEnd});
+  ConfirmButton(
+      {this.isCorrect, this.onClick, this.enabled = true, this.onAnimationEnd});
 
   @override
   _ConfirmButtonState createState() => _ConfirmButtonState();
@@ -24,9 +24,9 @@ class _ConfirmButtonState extends State<ConfirmButton>
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    
+
     _controller.addListener(() {
-      if(_controller.status == AnimationStatus.completed){    
+      if (_controller.status == AnimationStatus.completed) {
         widget.onAnimationEnd();
       }
     });
@@ -62,14 +62,13 @@ class _ConfirmButtonState extends State<ConfirmButton>
     );
   }
 
-  
-
-
   _wrongAnswerAnimation(value) {
     return Transform.translate(
       offset: Offset(cos(3 * pi * value) * 30 * (1 - value), 0),
       child: Card(
-        color: widget.enabled ? Color.lerp(Colors.redAccent, Colors.blueAccent, value) : Colors.grey[300],
+        color: widget.enabled
+            ? Color.lerp(Colors.redAccent, Colors.blueAccent, value)
+            : Colors.grey[300],
         child: InkWell(
           onTap: widget.enabled ? _onTap : null,
           child: Padding(
@@ -77,7 +76,9 @@ class _ConfirmButtonState extends State<ConfirmButton>
             child: Icon(
               Icons.check,
               size: 32,
-              color: widget.enabled ? Color.lerp(Colors.black, Colors.white, value) : Colors.grey ,
+              color: widget.enabled
+                  ? Color.lerp(Colors.black, Colors.white, value)
+                  : Colors.grey,
             ),
           ),
         ),
@@ -87,9 +88,11 @@ class _ConfirmButtonState extends State<ConfirmButton>
 
   _correctAnswerAnimation(value) {
     return Card(
-      color: widget.enabled ? Color.lerp(Colors.blueAccent, Colors.green, value) : Colors.grey[300],
+      color: widget.enabled
+          ? Color.lerp(Colors.blueAccent, Colors.green, value)
+          : Colors.grey[300],
       child: InkWell(
-          onTap: widget.enabled ? _onTap : null,
+        onTap: widget.enabled ? _onTap : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Icon(
@@ -102,11 +105,11 @@ class _ConfirmButtonState extends State<ConfirmButton>
     );
   }
 
-_defaultState() {
+  _defaultState() {
     return Card(
       color: widget.enabled ? Colors.blueAccent : Colors.grey[300],
       child: InkWell(
-          onTap: widget.enabled ? _onTap : null,
+        onTap: widget.enabled ? _onTap : null,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Icon(
@@ -118,7 +121,6 @@ _defaultState() {
       ),
     );
   }
-  
 
   _onTap() {
     if (widget.onClick != null) widget.onClick();

@@ -64,7 +64,7 @@ class ExerciseGenerator {
     Random random = Random();
     return competencyList.map<ExerciseConfig>((entry) {
       return ExerciseConfig(
-          name: ExerciseTypes.all[random.nextInt(ExerciseTypes.all.length)],
+          name: 'readWord',// ExerciseTypes.all[random.nextInt(ExerciseTypes.all.length)],
           correctOption: entry.key,
           options: _getOptions(entry.key, 4));
     }).toList();

@@ -20,26 +20,23 @@ class _ExercisesTabState extends State<ExercisesTab> {
 
   _wordExercise() {
     return InkWell(
-      onTap: () {
-        final exercises = ExerciseGenerator.generate(10, 3);
-        Navigator.of(context).pushNamed('exercise', arguments: exercises);
-      },
-      child: _activityTile(Icons.fitness_center)
-    );
+        onTap: () {
+          final exercises = ExerciseGenerator.generate(10, 3);
+          Navigator.of(context).pushNamed('exercise', arguments: exercises);
+        },
+        child: _activityTile(Icons.fitness_center));
   }
 
   _textReading() {
     return InkWell(
-      onTap: () {
-        final exercises = ExerciseGenerator.generate(10, 3);
-        Navigator.of(context).pushNamed('textChoose', arguments: exercises);
-      },
-      child: _activityTile(Icons.book)
-    );
+        onTap: () {
+          final exercises = ExerciseGenerator.generate(10, 3);
+          Navigator.of(context).pushNamed('textChoose', arguments: exercises);
+        },
+        child: _activityTile(Icons.book));
   }
 
-
-  _activityTile(icon){
+  _activityTile(icon) {
     return Card(
       child: Container(
           padding: EdgeInsets.all(64),

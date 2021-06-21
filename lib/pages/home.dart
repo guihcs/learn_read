@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:learn_read/pages/progress/progress.dart';
 
@@ -11,12 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _selectedIndex = 0;
-  dynamic _tabs = [
-    ExercisesTab(),
-    ProgressTab()
-  ];
+  dynamic _tabs = [ExercisesTab(), ProgressTab()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -33,15 +27,9 @@ class _HomePageState extends State<HomePage> {
       body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home'
-
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined),
-            label: 'Progresso'
-          ),
+              icon: Icon(Icons.analytics_outlined), label: 'Progresso'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.deepPurple[800],
@@ -49,11 +37,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }
-
-
-
-
-
-

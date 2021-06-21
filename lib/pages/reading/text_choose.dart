@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,24 +13,25 @@ class _TextChoosePageState extends State<TextChoosePage> {
       appBar: AppBar(
         title: Text('Leitura'),
       ),
-      body: Column(children: [
-        _bookTile('assets/text/alice.md', 'Alice'),
-        _bookTile('assets/text/pinocchio.md', 'Pinocchio'),
-      ],),
+      body: Column(
+        children: [
+          _bookTile('assets/text/alice.md', 'Alice'),
+          _bookTile('assets/text/pinocchio.md', 'Pinocchio'),
+        ],
+      ),
     );
   }
 
-  _bookTile(textPath, name){
-    return Card(child: 
-        ListTile(
-          onTap: () async {
-            String text = await rootBundle.loadString(textPath, cache: false);
-            Navigator.of(context).pushNamed('textRead', arguments: {
-              'text': text,
-              'title': name
-            });
-          },
-          title: 
-        Text(name),),);
+  _bookTile(textPath, name) {
+    return Card(
+      child: ListTile(
+        onTap: () async {
+          String text = await rootBundle.loadString(textPath, cache: false);
+          Navigator.of(context)
+              .pushNamed('textRead', arguments: {'text': text, 'title': name});
+        },
+        title: Text(name),
+      ),
+    );
   }
 }

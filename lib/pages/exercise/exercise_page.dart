@@ -119,13 +119,13 @@ class _ExercisePageState extends State<ExercisePage>
       isCorrect: config.responded ? config.isCorrect() : null,
       enabled: config.currentSelected != null,
       onClick: () {
-        if(config.isCorrect() == null) return;
-        if(config.isCorrect()!) {
-
-          AudioService.instance.playFile('assets/sounds/correct2.mp3', volume: 0.3);
-
-        } else if (!config.isCorrect()!){
-          AudioService.instance.playFile('assets/sounds/wrong.wav', volume: 0.5);
+        if (config.isCorrect() == null) return;
+        if (config.isCorrect()!) {
+          AudioService.instance
+              .playFile('assets/sounds/correct2.mp3', volume: 0.3);
+        } else if (!config.isCorrect()!) {
+          AudioService.instance
+              .playFile('assets/sounds/wrong.wav', volume: 0.5);
         }
         _answerQuestion(config);
       },
@@ -135,7 +135,7 @@ class _ExercisePageState extends State<ExercisePage>
     ));
   }
 
-  _answerQuestion(config) {    
+  _answerQuestion(config) {
     ExerciseGenerator.answerQuestion(config);
     setState(() {});
   }

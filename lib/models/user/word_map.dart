@@ -8,9 +8,7 @@ class WordMap {
   }
 
   toJson(){
-    final json = {};
-
-    return json;
+    return _wordMap.map((key, value) => MapEntry(key, List.from(value)));
   }
 
   Set<String>? getWordSet(word){

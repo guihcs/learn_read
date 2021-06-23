@@ -10,11 +10,13 @@ class ReadWordExercise extends StatefulWidget {
   final List<String> options;
   final Function(String)? onSelectedChange;
   final bool visible;
+  final DateTime exerciseTime;
 
   ReadWordExercise(
       {required this.correct,
       required this.options,
       required this.visible,
+      required this.exerciseTime,
       this.currentSelected,
       this.onSelectedChange});
 
@@ -25,6 +27,15 @@ class ReadWordExercise extends StatefulWidget {
 class _ReadWordExerciseState extends State<ReadWordExercise> {
   bool _isListening = false;
   String _listenedText = '';
+
+  @override
+  void didUpdateWidget(covariant ReadWordExercise oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.exerciseTime != oldWidget.exerciseTime) {
+      _isListening = false;
+      _listenedText = '';
+    }
+  }
 
   @override
   void dispose() {
@@ -64,9 +75,7 @@ class _ReadWordExerciseState extends State<ReadWordExercise> {
 
   _listenButton() {
     return ElevatedButton(
-        style: _isListening
-            ? ElevatedButton.styleFrom(primary: Colors.white)
-            : null,
+        style: _isListening ? ElevatedButton.styleFrom(primary: Colors.white) : null,
         onPressed: () async {
           if (_isListening) return;
           setState(() {
@@ -80,8 +89,7 @@ class _ReadWordExerciseState extends State<ReadWordExercise> {
           result = removeDiacritics(result).toLowerCase();
           String correct = removeDiacritics(widget.correct).toLowerCase();
 
-          num similarity = _levenshtein(correct, result) /
-              max(correct.length, result.length);
+          num similarity = _levenshtein(correct, result) / max(correct.length, result.length);
 
           if (widget.onSelectedChange != null) {
             String selected = similarity >= 0.5 ? correct : result;
@@ -93,8 +101,7 @@ class _ReadWordExerciseState extends State<ReadWordExercise> {
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Icon(Icons.mic,
-              color: _isListening ? Colors.black : Colors.white, size: 42),
+          child: Icon(Icons.mic, color: _isListening ? Colors.black : Colors.white, size: 42),
         ));
   }
 
@@ -112,11 +119,7 @@ class _ReadWordExerciseState extends State<ReadWordExercise> {
     for (i = 1; i <= m; i++) {
       u = [i];
       for (j = 1; j <= n; j++) {
-        u.insert(
-            j,
-            a[i - 1] == b[j - 1]
-                ? t[j - 1]
-                : min<int>(t[j - 1], min(t[j], u[j - 1])) + 1);
+        u.insert(j, a[i - 1] == b[j - 1] ? t[j - 1] : min<int>(t[j - 1], min(t[j], u[j - 1])) + 1);
       }
       t = u;
     }

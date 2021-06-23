@@ -33,11 +33,6 @@ class _ConfirmButtonState extends State<ConfirmButton>
   }
 
   @override
-  void didUpdateWidget(covariant ConfirmButton oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
     super.dispose();
     _controller.dispose();
@@ -123,6 +118,7 @@ class _ConfirmButtonState extends State<ConfirmButton>
   }
 
   _onTap() {
+    if(_controller.isAnimating) return;
     if (widget.onClick != null) widget.onClick();
     _controller.forward(from: 0);
   }

@@ -11,6 +11,12 @@ class _ProgressTabState extends State<ProgressTab> {
   @override
   Widget build(BuildContext context) {
     List<num> progressHistory = UserProgressService.progressHistory;
+
+    dynamic progress = List.generate(
+      progressHistory.length,
+          (index) => FlSpot(index * 1.0, progressHistory[index] * 1.0),
+    ).skip(progressHistory.length > 10 ? progressHistory.length - 10 : 0).toList();
+
     return Column(mainAxisSize: MainAxisSize.min, children: [
       ListTile(
         title: Text(
@@ -24,11 +30,7 @@ class _ProgressTabState extends State<ProgressTab> {
           LineChartData(
             lineBarsData: [
               LineChartBarData(
-                spots: List.generate(
-                  progressHistory.length,
-                  (index) => FlSpot(index * 1.0, progressHistory[index] * 1.0),
-                ),
-                isCurved: true,
+                spots: progress,
                 barWidth: 5,
                 isStrokeCapRound: true,
                 dotData: FlDotData(

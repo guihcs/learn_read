@@ -12,6 +12,7 @@ class ExerciseBuilder {
           options: config.options,
           onSelectedChange: config.onChanged,
           currentSelected: config.currentSelected,
+          exerciseTime: config.generationTime,
           visible: visible,
         );
       case ExerciseTypes.readWord:
@@ -20,6 +21,7 @@ class ExerciseBuilder {
           options: config.options,
           onSelectedChange: config.onChanged,
           currentSelected: config.currentSelected,
+          exerciseTime: config.generationTime,
           visible: visible
         );
       default:

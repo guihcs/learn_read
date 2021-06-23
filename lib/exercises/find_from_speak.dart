@@ -7,11 +7,13 @@ class FindFromSpeakExercise extends StatefulWidget {
   final List<String> options;
   final Function(String)? onSelectedChange;
   final bool visible;
+  final DateTime exerciseTime;
 
   FindFromSpeakExercise(
       {required this.correct,
       required this.options,
       required this.visible,
+      required this.exerciseTime,
       this.currentSelected,
       this.onSelectedChange});
 
@@ -21,11 +23,33 @@ class FindFromSpeakExercise extends StatefulWidget {
 
 class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
   bool _isSpeaking = false;
+  bool _spoke = false;
 
   @override
   void initState() {
     super.initState();
-    _speak(widget.correct);
+    if(!_spoke && widget.visible){
+      _speak(widget.correct);
+      _spoke = true;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant FindFromSpeakExercise oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(widget.exerciseTime != oldWidget.exerciseTime){
+      _spoke = false;
+    }
+    if (widget.visible && !_spoke) {
+      _speak(widget.correct);
+      _spoke = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _spoke = false;
   }
 
   @override
@@ -49,8 +73,7 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
       double mh = constraints.maxHeight;
       double mw = constraints.maxWidth;
       double pad = (mh - mw).abs() / 2;
-      EdgeInsets padding = EdgeInsets.symmetric(
-          horizontal: mw > mh ? pad : 0, vertical: mh > mw ? pad : 0);
+      EdgeInsets padding = EdgeInsets.symmetric(horizontal: mw > mh ? pad : 0, vertical: mh > mw ? pad : 0);
 
       return GridView.count(
         shrinkWrap: true,
@@ -79,9 +102,7 @@ class _FindFromSpeakExerciseState extends State<FindFromSpeakExercise> {
 
   _card(option) {
     return Card(
-      color: widget.currentSelected == option
-          ? Colors.lightBlueAccent[200]
-          : Colors.white,
+      color: widget.currentSelected == option ? Colors.lightBlueAccent[200] : Colors.white,
       child: InkWell(
         onTap: () {
           _speak(option);

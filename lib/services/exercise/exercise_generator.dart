@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:learn_read/models/exercise/exercise_config.dart';
 import 'package:learn_read/models/user/word_competency.dart';
 import 'package:learn_read/services/exercise/user_progress_service.dart';
-import 'package:collection/collection.dart';
 
 class ExerciseGenerator {
   static answerQuestion(ExerciseConfig config) {
@@ -30,21 +30,18 @@ class ExerciseGenerator {
     });
 
     num total = UserProgressService.wordCompetencies[response]!.total;
-    num exerciseCompetence =
-        _calcNewCompetence(total, learningRate * -1, response);
+    num exerciseCompetence = _calcNewCompetence(total, learningRate * -1, response);
     UserProgressService.wordCompetencies[response]!.total = exerciseCompetence;
   }
 
   static _updateWordSetCompetencies(char, response, lr) {
-    Set<String>? wordsThatContainsChar =
-        UserProgressService.wordMap.getWordSet(char);
+    Set<String>? wordsThatContainsChar = UserProgressService.wordMap.getWordSet(char);
     if (wordsThatContainsChar == null) return;
     wordsThatContainsChar.forEach((word) {
       if (word == response) return;
       num lastCompetence = UserProgressService.wordCompetencies[word]!.total;
       num wordLearningRate = word.length <= response.length ? lr * -1 : lr;
-      num newCompetence =
-          _calcNewCompetence(lastCompetence, wordLearningRate, word);
+      num newCompetence = _calcNewCompetence(lastCompetence, wordLearningRate, word);
       UserProgressService.wordCompetencies[word]!.total = newCompetence;
     });
   }
@@ -64,15 +61,16 @@ class ExerciseGenerator {
     Random random = Random();
     return competencyList.map<ExerciseConfig>((entry) {
       return ExerciseConfig(
-          name: 'readWord',// ExerciseTypes.all[random.nextInt(ExerciseTypes.all.length)],
+          name: ExerciseTypes.all[random.nextInt(ExerciseTypes.all.length)],
+          visible: false,
           correctOption: entry.key,
-          options: _getOptions(entry.key, 4));
+          options: _getOptions(entry.key, 4),
+          generationTime: DateTime.now());
     }).toList();
   }
 
   static _getCompetencyList(count, maxRepeatedCount, maxLoopCount) {
-    Map<String, Competencies> competencies =
-        UserProgressService.wordCompetencies;
+    Map<String, Competencies> competencies = UserProgressService.wordCompetencies;
 
     final exercises = [];
     Random random = Random();
@@ -83,12 +81,9 @@ class ExerciseGenerator {
         break;
       }
 
-      MapEntry<String, dynamic>? exercise =
-          competencies.entries.firstWhereOrNull((element) {
-        final exerciseRepeatedCount = exercises.fold<int>(
-            0,
-            (previousValue, el) =>
-                el.key == element.key ? previousValue + 1 : previousValue);
+      MapEntry<String, dynamic>? exercise = competencies.entries.firstWhereOrNull((element) {
+        final exerciseRepeatedCount =
+            exercises.fold<int>(0, (previousValue, el) => el.key == element.key ? previousValue + 1 : previousValue);
         if (exerciseRepeatedCount >= maxRepeatedCount) return false;
         return random.nextDouble() < element.value.total;
       });
@@ -105,15 +100,12 @@ class ExerciseGenerator {
 
   static _getOptions(correct, count) {
     Random random = Random();
-    Map<String, Competencies> competencies =
-        UserProgressService.wordCompetencies;
+    Map<String, Competencies> competencies = UserProgressService.wordCompetencies;
     final options = <String>[];
     final words = competencies.keys.toList();
     for (int i = 0; i < words.length; i++) {
       if (options.length >= count - 1) break;
-      if (words[i].length != correct.length ||
-          words[i] == correct ||
-          random.nextDouble() < 0.5) continue;
+      if (words[i].length != correct.length || words[i] == correct || random.nextDouble() < 0.5) continue;
 
       options.add(words[i]);
     }

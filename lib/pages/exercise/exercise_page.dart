@@ -31,9 +31,8 @@ class _ExercisePageState extends State<ExercisePage>
           _currentExercise = _exercises[_currentExerciseIndex];
         if (_currentExerciseIndex < _exercises.length - 1)
           _nextExercise = _exercises[_currentExerciseIndex + 1];
-
+        _currentExercise.visible = true;
         _pageController.jumpToPage(0);
-
         setState(() {
           _isChanging = false;
         });

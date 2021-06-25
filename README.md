@@ -9,8 +9,9 @@ A Flutter project to teach children how to read.
 
 The app will have a lot of reading skills exercises in various levels to make the children read better.
 
-[Marketing Video](https://github.com/guihcs/learn_read/wiki)
-[App Demonstration](https://drive.google.com/file/d/1UFoisrzoqz3dduii3AYQGkDvZ5NkS-Rq/view)
+[Marketing Video](https://drive.google.com/file/d/1UFoisrzoqz3dduii3AYQGkDvZ5NkS-Rq/view)
+
+[App Demonstration](https://youtu.be/Li9Mwf1rN9c)
 
 ### Levels
 
